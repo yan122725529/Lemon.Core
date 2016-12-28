@@ -1,61 +1,16 @@
-﻿using System.Windows;
+﻿using System.Linq;
+using System.Windows;
 using System.Windows.Media;
 
-namespace ZilLion.Core.Infrastructure.Unities.VisualTree
+namespace Lemon.Core.Unities.UnitiesMethods.Wpf
 {
     public static class VisualHelper
     {
-        #region UIHelper
+       
 
-        public static T FindAncestor<T>(this DependencyObject dependencyObject) where T : DependencyObject
-        {
-            while (dependencyObject != null && !(dependencyObject is T))
-            {
-                dependencyObject = VisualTreeHelper.GetParent(dependencyObject);
-            }
-            return dependencyObject as T;
-        }
+       
 
-        #endregion
-
-        /// <summary>
-        ///     递归查找视觉树
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="visual"></param>
-        /// <returns></returns>
-        public static T FindVisualChild<T>(this Visual visual) where T : Visual
-        {
-            for (var i = 0; i < VisualTreeHelper.GetChildrenCount(visual); i++)
-            {
-                var child = (Visual) VisualTreeHelper.GetChild(visual, i);
-                if (child != null)
-                {
-                    var correctlyTyped = child as T;
-                    if (correctlyTyped != null)
-                    {
-                        return correctlyTyped;
-                    }
-
-                    var descendent = FindVisualChild<T>(child);
-                    if (descendent != null)
-                    {
-                        return descendent;
-                    }
-                }
-            }
-
-            return null;
-        }
-
-        public static T FindAncestorByLogicalTree<T>(this DependencyObject dependencyObject) where T : DependencyObject
-        {
-            while (dependencyObject != null && !(dependencyObject is T))
-            {
-                dependencyObject = LogicalTreeHelper.GetParent(dependencyObject);
-            }
-            return (T) dependencyObject;
-        }
+      
 
         #region 方法
 
@@ -66,19 +21,21 @@ namespace ZilLion.Core.Infrastructure.Unities.VisualTree
         /// <param name="propertyToFind">查找的属性</param>
         /// <param name="propertyValue">对应属性的值</param>
         /// <returns></returns>
-        public static DependencyObject GetVisualParentByProperty(DependencyObject root,
-            DependencyProperty propertyToFind, object propertyValue)
+        public static DependencyObject GetVisualParentByProperty(DependencyObject root, DependencyProperty propertyToFind, object propertyValue)
         {
-            var dpParent = VisualTreeHelper.GetParent(root);
-            if (dpParent == null)
+            while (true)
             {
-                return null;
+                var dpParent = VisualTreeHelper.GetParent(root);
+                if (dpParent == null)
+                {
+                    return null;
+                }
+                if (dpParent.GetValue(propertyToFind).Equals(propertyValue))
+                {
+                    return dpParent;
+                }
+                root = dpParent;
             }
-            if (dpParent.GetValue(propertyToFind).Equals(propertyValue))
-            {
-                return dpParent;
-            }
-            return GetVisualParentByProperty(dpParent, propertyToFind, propertyValue);
         }
 
         /// <summary>
@@ -121,11 +78,7 @@ namespace ZilLion.Core.Infrastructure.Unities.VisualTree
             {
                 return null;
             }
-            if (dpParent.GetValue(FrameworkElement.NameProperty).ToString().Equals(strNameToFind))
-            {
-                return dpParent;
-            }
-            return GetVisualParentByName(dpParent, strNameToFind);
+            return dpParent.GetValue(FrameworkElement.NameProperty).ToString().Equals(strNameToFind) ? dpParent : GetVisualParentByName(dpParent, strNameToFind);
         }
 
         /// <summary>
@@ -162,19 +115,7 @@ namespace ZilLion.Core.Infrastructure.Unities.VisualTree
         public static DependencyObject GetChildByName(DependencyObject root, string strNameToFind)
         {
             var dp = LogicalTreeHelper.GetChildren(root);
-            foreach (var child in dp)
-            {
-                var dpChild = child as DependencyObject;
-                if (dpChild != null)
-                {
-                    if (dpChild.DependencyObjectType.Name == strNameToFind)
-                    {
-                        return dpChild;
-                    }
-                    return GetChildByName(dpChild, strNameToFind);
-                }
-            }
-            return null;
+            return dp.OfType<DependencyObject>().Select(dpChild => dpChild.DependencyObjectType.Name == strNameToFind ? dpChild : GetChildByName(dpChild, strNameToFind)).FirstOrDefault();
         }
 
         #endregion

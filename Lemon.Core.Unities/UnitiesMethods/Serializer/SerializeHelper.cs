@@ -6,7 +6,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 
-namespace ZilLion.Core.Infrastructure.Unities.Serializer
+namespace Lemon.Core.Unities.UnitiesMethods.Serializer
 {
     public class SerializeHelper
     {

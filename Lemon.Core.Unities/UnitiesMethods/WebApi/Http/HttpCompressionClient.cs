@@ -3,10 +3,10 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using Ionic.Zlib;
+using Lemon.Core.Unities.UnitiesMethods.WebApi.Entity;
 using Newtonsoft.Json;
-using ZilLion.Core.Infrastructure.Unities.WebApi.Entity;
 
-namespace ZilLion.Core.Infrastructure.Unities.WebApi.Http
+namespace Lemon.Core.Unities.UnitiesMethods.WebApi.Http
 {
     public class HttpCompressionClient : IHttpClient
     {

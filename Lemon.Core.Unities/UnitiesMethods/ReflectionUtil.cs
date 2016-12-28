@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 
-namespace ZilLion.Core.Infrastructure.Unities
+namespace Lemon.Core.Unities.UnitiesMethods
 {
     public static class ReflectionUtil
     {

@@ -1,4 +1,4 @@
-﻿namespace ZilLion.Core.Infrastructure.Unities.WebApi.Entity
+﻿namespace Lemon.Core.Unities.UnitiesMethods.WebApi.Entity
 {
     public class RequestIdentity
     {

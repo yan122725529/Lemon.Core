@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Security.Principal;
 
-namespace Ywdsoft.Utility
+namespace Lemon.Core.Unities.UnitiesMethods.Admin
 {
     public class AdminRun
     {
         /// <summary>
-        /// 以管理员方式运行程序
+        ///     以管理员方式运行程序
         /// </summary>
         public static void Run()
         {
@@ -14,29 +16,22 @@ namespace Ywdsoft.Utility
              * 如果不是管理员，则使用启动对象启动程序，以确保使用管理员身份运行
              */
             //获得当前登录的Windows用户标示
-            System.Security.Principal.WindowsIdentity identity = System.Security.Principal.WindowsIdentity.GetCurrent();
-            System.Security.Principal.WindowsPrincipal principal = new System.Security.Principal.WindowsPrincipal(identity);
+            var identity = WindowsIdentity.GetCurrent();
+            var principal = new WindowsPrincipal(identity);
             //判断当前登录用户是否为管理员
             //如果不是管理员，则以管理员方式运行
-            if (!principal.IsInRole(System.Security.Principal.WindowsBuiltInRole.Administrator))
+            if (principal.IsInRole(WindowsBuiltInRole.Administrator)) return;
+            //创建启动对象
+            var startInfo = new ProcessStartInfo
             {
-                //创建启动对象
-                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-                startInfo.UseShellExecute = true;
-                startInfo.WorkingDirectory = Environment.CurrentDirectory;
-                startInfo.FileName = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
-                //设置启动动作,确保以管理员身份运行
-                startInfo.Verb = "runas";
-                try
-                {
-                    System.Diagnostics.Process.Start(startInfo);
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
-                System.Environment.Exit(0);
-            }
+                UseShellExecute = true,
+                WorkingDirectory = Environment.CurrentDirectory,
+                FileName = Process.GetCurrentProcess().MainModule.FileName,
+                Verb = "runas"
+            };
+            //设置启动动作,确保以管理员身份运行
+            Process.Start(startInfo);
+            Environment.Exit(0);
         }
     }
 }

@@ -2,7 +2,8 @@
 using System.ComponentModel;
 using System.Linq.Expressions;
 
-
+namespace Lemon.Core.Unities.ExtensionMethods.Wpf
+{
     /// <summary>
     ///     The notify property changed extensions.
     /// </summary>
@@ -24,14 +25,11 @@ using System.Linq.Expressions;
             TObject sender,
             Expression<Func<TObject, TProperty>> expression)
         {
-            if (handler != null)
-            {
-                handler(sender, new PropertyChangedEventArgs(sender.GetPropertyValue(expression)
+            handler?.Invoke(sender, new PropertyChangedEventArgs(sender.GetPropertyNameByExpression<TObject, TProperty>(expression)
 
 
 
-                    ));
-            }
+            ));
         }
 
         /// <summary>
@@ -63,7 +61,7 @@ using System.Linq.Expressions;
             where TObject : INotifyPropertyChanged
         {
             // This is similar but not identical to:
-            string propertyValue = source.GetPropertyValue(expression);
+            var propertyValue = source.GetPropertyNameByExpression(expression);
             PropertyChangedEventHandler ret = (s, e) =>
             {
                 if (e.PropertyName == propertyValue)
@@ -152,3 +150,4 @@ using System.Linq.Expressions;
 
         #endregion
     }
+}

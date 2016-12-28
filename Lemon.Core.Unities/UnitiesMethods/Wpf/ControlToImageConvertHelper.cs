@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace ZilLion.Core.Infrastructure.Extensions.Unities
+namespace Lemon.Core.Unities.UnitiesMethods.Wpf
 {
     public enum ImageType
     {
@@ -27,24 +27,18 @@ namespace ZilLion.Core.Infrastructure.Extensions.Unities
         private static BitmapEncoder GetImageFromControl(FrameworkElement controlToConvert, ImageType imageType)
         {
             RenderTargetBitmap renderBitmap;
-            var bounds = FrameworkElementExtension.GetBounds(controlToConvert, controlToConvert.Parent as Visual);
+            var bounds = controlToConvert.GetBounds(controlToConvert.Parent as Visual);
             if (bounds.IsEmpty)
-            {
-                renderBitmap = new RenderTargetBitmap((int)controlToConvert.ActualWidth, (int)controlToConvert.ActualHeight, 96d,
-            96d, PixelFormats.Pbgra32);
-            }
+                renderBitmap = new RenderTargetBitmap((int) controlToConvert.ActualWidth,
+                    (int) controlToConvert.ActualHeight, 96d,
+                    96d, PixelFormats.Pbgra32);
             else
-            {
-                 renderBitmap = new RenderTargetBitmap((int)bounds.Width, (int)bounds.Height, 96d,
-            96d, PixelFormats.Pbgra32);
-            }
+                renderBitmap = new RenderTargetBitmap((int) bounds.Width, (int) bounds.Height, 96d,
+                    96d, PixelFormats.Pbgra32);
             renderBitmap.Render(controlToConvert);
-
             var encoder = GetBitmapEncoderByImageType(imageType);
-
             // puch rendered bitmap into it
             encoder.Frames.Add(BitmapFrame.Create(renderBitmap));
-
             return encoder;
         }
 
@@ -84,36 +78,34 @@ namespace ZilLion.Core.Infrastructure.Extensions.Unities
             var returnType = ImageType.Png;
 
             var extension = Path.GetExtension(fileName);
-            if (!string.IsNullOrEmpty(extension))
+            if (string.IsNullOrEmpty(extension)) return returnType;
+            switch (extension.ToLower())
             {
-                switch (extension.ToLower())
-                {
-                    case ".bmp":
-                        returnType = ImageType.Bmp;
-                        break;
-                    case ".gif":
-                        returnType = ImageType.Gif;
-                        break;
-                    case ".jpeg":
-                    case ".jpg":
-                    case ".jpe":
-                    case "jfif":
-                        returnType = ImageType.Jpeg;
-                        break;
-                    case ".png":
-                        returnType = ImageType.Png;
-                        break;
-                    case ".tiff":
-                    case ".tif":
-                        returnType = ImageType.Tiff;
-                        break;
-                    case ".wdp":
-                        returnType = ImageType.Wdp;
-                        break;
-                    default:
-                        returnType = ImageType.Png;
-                        break;
-                }
+                case ".bmp":
+                    returnType = ImageType.Bmp;
+                    break;
+                case ".gif":
+                    returnType = ImageType.Gif;
+                    break;
+                case ".jpeg":
+                case ".jpg":
+                case ".jpe":
+                case "jfif":
+                    returnType = ImageType.Jpeg;
+                    break;
+                case ".png":
+                    returnType = ImageType.Png;
+                    break;
+                case ".tiff":
+                case ".tif":
+                    returnType = ImageType.Tiff;
+                    break;
+                case ".wdp":
+                    returnType = ImageType.Wdp;
+                    break;
+                default:
+                    returnType = ImageType.Png;
+                    break;
             }
 
             return returnType;
@@ -129,10 +121,8 @@ namespace ZilLion.Core.Infrastructure.Extensions.Unities
         {
             // return first frame of image 
             var encoder = GetImageFromControl(controlToConvert, imageType);
-            if (encoder != null && encoder.Frames != null && encoder.Frames.Count > 0)
-            {
+            if ((encoder != null) && (encoder.Frames.Count > 0))
                 return encoder.Frames[0];
-            }
 
             return new BitmapImage();
         }

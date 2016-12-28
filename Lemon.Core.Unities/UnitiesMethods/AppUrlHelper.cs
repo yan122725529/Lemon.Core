@@ -1,14 +1,14 @@
 ﻿using System;
 
-namespace ZilLion.Core.Infrastructure.Unities
+namespace Lemon.Core.Unities.UnitiesMethods
 {
-    public static class UrlHelper
+    public static class AppUrlHelper
     {
-        static UrlHelper()
+        static AppUrlHelper()
         {
              var appname = System.IO.Path.GetFileName(System.Reflection.Assembly.GetEntryAssembly().GetName().Name);
             AppDataLocalPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) +
-                               string.Format(@"\{0}\", appname);
+                               $@"\{appname}\";
         }
         public static string AppDataLocalPath { get; set; }
 

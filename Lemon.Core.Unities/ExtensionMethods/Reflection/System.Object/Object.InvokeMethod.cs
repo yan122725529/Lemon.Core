@@ -42,4 +42,28 @@ public static partial class Extensions
         object value = method.Invoke(obj, parameters);
         return (value is T ? (T) value : default(T));
     }
+
+    /// <summary>
+    /// 以T 为参数执行Action
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="obj"></param>
+    /// <param name="action"></param>
+    public static void SaftyInvoke<T>(this object obj, Action<T> action)
+    {
+        if (obj is T && action != null)
+            action.Invoke((T)obj);
+    }
+    /// <summary>
+    /// 以T 为参数执行Action
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="obj"></param>
+    /// <param name="action"></param>
+    public static void SaftyInvoke<T>(this T obj, Action<T> action) where T : class
+    {
+        if (obj != default(T) && action != null)
+            action.Invoke(obj);
+    }
+
 }

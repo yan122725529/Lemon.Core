@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace ZilLion.Core.Infrastructure.Unities.WebApi.Http
+namespace Lemon.Core.Unities.UnitiesMethods.WebApi.Http
 {
     public  class DigestHelper
     {

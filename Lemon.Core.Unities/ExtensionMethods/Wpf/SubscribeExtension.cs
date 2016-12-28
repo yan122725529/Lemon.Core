@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 
-namespace ZilLion.Core.Infrastructure.Extensions.ViewExtensions
+namespace Lemon.Core.Unities.ExtensionMethods.Wpf
 {
     public static class SubscribeExtension
     {

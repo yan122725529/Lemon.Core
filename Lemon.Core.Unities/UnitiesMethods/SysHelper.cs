@@ -2,15 +2,15 @@
 using System.Management;
 using Microsoft.Win32;
 
-namespace ZilLion.Core.Infrastructure.Unities
+namespace Lemon.Core.Unities.UnitiesMethods
 {
     public static class SysHelper
     {
         static SysHelper()
         {
-            OSProductName = GetOSName();
+            OsProductName = GetOsName();
             ComputerMacAddress = GetMacAddress();
-            ComputerName = Environment.MachineName != null ? Environment.MachineName.ToLower() : null;
+            ComputerName = Environment.MachineName.ToLower();
             HasFramework40 = CheckFramework();
         }
 
@@ -19,20 +19,24 @@ namespace ZilLion.Core.Infrastructure.Unities
         public static string ComputerName { get; private set; }
 
 
-        public static string OSProductName { get; private set; }
+        public static string OsProductName { get; private set; }
         public static string ComputerMacAddress { get; private set; }
 
 
         public static bool HasFramework40 { get; private set; }
 
-        private static string GetOSName()
+        private static string GetOsName()
         {
             try
             {
                 var rk = Registry.LocalMachine.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion");
-                var OSname = rk.GetValue("ProductName").ToString();
-                rk.Close();
-                return OSname;
+                if (rk != null)
+                {
+                    var oSname = rk.GetValue("ProductName").ToString();
+                    rk.Close();
+                    return oSname;
+                }
+                return string.Empty;
             }
             catch (Exception)
             {
@@ -55,13 +59,12 @@ namespace ZilLion.Core.Infrastructure.Unities
                 var mc = new
                     ManagementClass("Win32_NetworkAdapterConfiguration");
                 var moc = mc.GetInstances();
-                foreach (ManagementObject mo in moc)
+                foreach (var o in moc)
                 {
-                    if ((bool) mo["IPEnabled"])
-                    {
-                        mac = mo["MacAddress"].ToString();
-                        break;
-                    }
+                    var mo = (ManagementObject) o;
+                    if (!(bool) mo["IPEnabled"]) continue;
+                    mac = mo["MacAddress"].ToString();
+                    break;
                 }
                 moc = null;
                 mc = null;
@@ -88,21 +91,21 @@ namespace ZilLion.Core.Infrastructure.Unities
             return fullValue != null && fullValue.ToString() == "1";
         }
 
-        #region Registry AbizClient
+        #region Registry ZilLionClient
 
-        public static string GetRegistryCurrentUserOfAbizClientValue(string key)
+        public static string GetRegistryCurrentUserOfZilLionClientValue(string key)
         {
-            return GetRegistryCurrentUserOfValue("SOFTWARE\\AbizClient", key);
+            return GetRegistryCurrentUserOfValue("SOFTWARE\\ZilLionClient", key);
         }
 
-        public static void SetRegistryCurrentUserOfAbizClientValue(string key, string value)
+        public static void SetRegistryCurrentUserOfZilLionClientValue(string key, string value)
         {
-            SetRegistryCurrentUserOfValue("SOFTWARE\\AbizClient", key, value);
+            SetRegistryCurrentUserOfValue("SOFTWARE\\ZilLionClient", key, value);
         }
 
-        public static void DeleteRegistryCurrentUserOfAbizClientValue(string key)
+        public static void DeleteRegistryCurrentUserOfZilLionClientValue(string key)
         {
-            DeleteRegistryCurrentUserOfValue("SOFTWARE\\AbizClient", key);
+            DeleteRegistryCurrentUserOfValue("SOFTWARE\\ZilLionClient", key);
         }
 
         #endregion
@@ -118,12 +121,8 @@ namespace ZilLion.Core.Infrastructure.Unities
         public static string GetRegistryCurrentUserOfValueIgnoerEx(string subKey, string key)
         {
             var versionKey = Registry.CurrentUser.OpenSubKey(subKey, true);
-            if (versionKey == null)
-                return string.Empty;
-            var versionValue = versionKey.GetValue(key);
-            if (versionValue == null || string.IsNullOrEmpty(versionValue.ToString().Trim()))
-                return string.Empty;
-            return versionValue.ToString();
+            var versionValue = versionKey?.GetValue(key);
+            return string.IsNullOrEmpty(versionValue?.ToString().Trim()) ? string.Empty : versionValue.ToString();
         }
 
         /// <summary>
@@ -137,23 +136,22 @@ namespace ZilLion.Core.Infrastructure.Unities
             var versionKey = Registry.CurrentUser.OpenSubKey(subKey, true);
 
             if (versionKey == null)
-                throw new NullReferenceException(string.Format("Can't find Registry.CurrentUser.OpenSubKey of {0}",
-                    subKey));
+                throw new NullReferenceException($"Can't find Registry.CurrentUser.OpenSubKey of {subKey}");
 
             var versionValue = versionKey.GetValue(key);
-            return versionValue == null ? string.Empty : versionValue.ToString();
+            return versionValue?.ToString() ?? string.Empty;
         }
 
         public static void SetRegistryCurrentUserOfValue(string subKey, string key, string value)
         {
             var subValue = Registry.CurrentUser.CreateSubKey(subKey);
-            subValue.SetValue(key, value);
+            subValue?.SetValue(key, value);
         }
 
         public static void DeleteRegistryCurrentUserOfValue(string subKey, string key)
         {
             var subValue = Registry.CurrentUser.CreateSubKey(subKey);
-            subValue.DeleteValue(key, false);
+            subValue?.DeleteValue(key, false);
         }
 
         #endregion

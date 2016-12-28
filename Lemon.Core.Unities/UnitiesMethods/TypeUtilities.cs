@@ -6,7 +6,7 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
 
-namespace ZilLion.Core.Infrastructure.Unities
+namespace Lemon.Core.Unities.UnitiesMethods
 {
     public static class TypeUtilities
     {

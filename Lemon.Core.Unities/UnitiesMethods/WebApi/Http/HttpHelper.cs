@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using Newtonsoft.Json;
 
-namespace ZilLion.Core.Infrastructure.Unities.WebApi.Http
+namespace Lemon.Core.Unities.UnitiesMethods.WebApi.Http
 {
     public class HttpHelper
     {

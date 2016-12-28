@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace ZilLion.Core.Infrastructure.Extensions
+namespace Lemon.Core.Unities.ExtensionMethods.Wpf
 {
     public static class CommonWPFExtension
     {

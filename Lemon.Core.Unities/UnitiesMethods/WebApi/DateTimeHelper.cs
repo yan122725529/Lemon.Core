@@ -1,7 +1,7 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2016 Senparc
     
-    文件名：WeixinDateTimeHelper.cs
+    文件名：DateTimeHelper.cs
     文件功能描述：时间处理
     
     
@@ -13,9 +13,9 @@
 
 using System;
 
-namespace ZilLion.Core.Infrastructure.Unities.WebApi
+namespace Lemon.Core.Unities.UnitiesMethods.WebApi
 {
-    public static class WeixinDateTimeHelper
+    public static class DateTimeHelper
     {
         public static DateTime BaseTime = new DateTime(1970, 1, 1);//Unix起始时间
 
@@ -39,11 +39,11 @@ namespace ZilLion.Core.Infrastructure.Unities.WebApi
         }
 
         /// <summary>
-        /// 获取微信DateTime（UNIX时间戳）
+        /// 获取UNIX时间戳
         /// </summary>
         /// <param name="dateTime">时间</param>
         /// <returns></returns>
-        public static long GetWeixinDateTime(DateTime dateTime)
+        public static long GetUnixTimestamp(DateTime dateTime)
         {
             return (dateTime.Ticks - BaseTime.Ticks) / 10000000 - 8 * 60 * 60;
         }

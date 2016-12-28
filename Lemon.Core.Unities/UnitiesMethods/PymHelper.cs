@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Linq;
-using Microsoft.International.Converters.PinYinConverter;
-using ZilLion.Core.Infrastructure.Extensions;
 
-namespace ZilLion.Core.Infrastructure.Unities
+namespace Lemon.Core.Unities.UnitiesMethods
 {
     public static class PymHelper
     {
@@ -20,17 +17,17 @@ namespace ZilLion.Core.Infrastructure.Unities
             {
                 try
                 {
-                    var chineseChar = new ChineseChar(chr);
+                    //var chineseChar = new ChineseChar(chr);
                     //因为汉字可能有多个读音，，这里是一个集合 
-                    var t = chineseChar.Pinyins.FirstOrDefault();
-                    if (t.IsNotNullOrEmpty())
-                    {
-                        r += t.Substring(0, 1);
-                    }
-                    else
-                    {
-                        r += chr;
-                    }
+                    //var t = chineseChar.Pinyins.FirstOrDefault();
+                    //if (t.IsNotNullOrEmpty())
+                    //{
+                    //    r += t.Substring(0, 1);
+                    //}
+                    //else
+                    //{
+                    //    r += chr;
+                    //}
                 }
                 catch (Exception)
                 {

@@ -7,7 +7,7 @@ using System.Windows.Media.Imaging;
 using ZXing;
 using ZXing.QrCode.Internal;
 
-namespace ZilLion.Core.Infrastructure.Unities
+namespace Lemon.Core.Unities.UnitiesMethods
 {
     public static class QrCodeCreater
     {
@@ -16,22 +16,16 @@ namespace ZilLion.Core.Infrastructure.Unities
         /// <summary>
         ///     从bitmap转换成ImageSource
         /// </summary>
-        /// <param name="icon"></param>
+        /// <param name="bitmap"></param>
         /// <returns></returns>
         public static ImageSource ChangeBitmapToImageSource(Bitmap bitmap)
         {
-            //Bitmap bitmap = icon.ToBitmap();
-
             var hBitmap = bitmap.GetHbitmap();
-
-
             ImageSource wpfBitmap = Imaging.CreateBitmapSourceFromHBitmap(
                 hBitmap,
                 IntPtr.Zero,
                 Int32Rect.Empty,
                 BitmapSizeOptions.FromEmptyOptions());
-
-
             return wpfBitmap;
         }
 
@@ -43,13 +37,12 @@ namespace ZilLion.Core.Infrastructure.Unities
         /// <returns>图片</returns>
         public static Bitmap GenByZXingNet(string msg)
         {
-            var writer = new BarcodeWriter();
-            writer.Format = BarcodeFormat.QR_CODE;
+            var writer = new BarcodeWriter {Format = BarcodeFormat.QR_CODE};
             writer.Options.Hints.Add(EncodeHintType.CHARACTER_SET, "UTF-8"); //编码问题
             writer.Options.Hints.Add(
                 EncodeHintType.ERROR_CORRECTION,
                 ErrorCorrectionLevel.H
-                );
+            );
             const int codeSizeInPixels = 250; //设置图片长宽
             writer.Options.Height = writer.Options.Width = codeSizeInPixels;
             writer.Options.Margin = 0; //设置边框
